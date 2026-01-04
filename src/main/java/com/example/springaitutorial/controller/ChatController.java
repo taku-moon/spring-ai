@@ -2,7 +2,6 @@ package com.example.springaitutorial.controller;
 
 import java.util.Map;
 
-import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,47 +9,46 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.springaitutorial.dto.ApiResponseDto;
-import com.example.springaitutorial.dto.ChatRequestDto;
-import com.example.springaitutorial.service.ChatService;
+import com.example.springaitutorial.chat.application.ChatFacade;
+import com.example.springaitutorial.chat.application.ChatResult;
+import com.example.springaitutorial.dto.ApiResponse;
+import com.example.springaitutorial.dto.ChatQueryRequest;
 
 @RestController
 @RequestMapping("/api")
 public class ChatController {
 
-	private final ChatService chatService;
+	private final ChatFacade chatFacade;
 
-	public ChatController(ChatService chatService) {
-		this.chatService = chatService;
+	public ChatController(ChatFacade chatFacade) {
+		this.chatFacade = chatFacade;
 	}
 
-	@PostMapping("/query")
-	public ResponseEntity<ApiResponseDto<Map<String, Object>>> sendMessage(@RequestBody ChatRequestDto request) {
+	@PostMapping("/chat-query")
+	public ResponseEntity<ApiResponse<Map<String, Object>>> sendMessage(@RequestBody ChatQueryRequest request) {
 		if (request.getUserMessage() == null || request.getUserMessage().isBlank()) {
-			return ResponseEntity
-				.status(HttpStatus.BAD_REQUEST)
-				.body(ApiResponseDto.fail("입력 값이 없습니다."));
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+				.body(ApiResponse.fail("입력 값이 없습니다."));
 		}
 
 		String systemMessage = "You are a helpful AI assistant.";
 
 		try {
-			ChatResponse response = chatService.openAiChat(systemMessage, request.getUserMessage(), request.getModel());
+			ChatResult result = chatFacade.chat(systemMessage, request.getUserMessage(), request.getModel());
 
-			if (response == null) {
-				return ResponseEntity
-					.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body(ApiResponseDto.fail("LLM 응답 생성 중 오류가 발생했습니다."));
-			}
+			Map<String, Object> data = Map.of(
+				"provider", result.getProvider(),
+				"model", result.getModel(),
+				"answer", result.getAnswer()
+			);
 
-			String answer = response.getResult().getOutput().getText();
-			return ResponseEntity.ok(ApiResponseDto.ok(Map.of("answer", answer)));
-		} catch (RuntimeException e) {
-			return ResponseEntity
-				.status(HttpStatus.INTERNAL_SERVER_ERROR)
-				.body(
-					ApiResponseDto.fail(e.getMessage() != null ? e.getMessage() : "알 수 없는 오류가 발생했습니다.")
-				);
+			return ResponseEntity.ok(ApiResponse.ok(data));
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+				.body(ApiResponse.fail(e.getMessage()));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+				.body(ApiResponse.fail("LLM 응답 생성 중 오류가 발생했습니다."));
 		}
 	}
 }
