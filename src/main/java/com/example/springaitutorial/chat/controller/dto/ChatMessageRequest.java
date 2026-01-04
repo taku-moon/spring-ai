@@ -1,11 +1,11 @@
-package com.example.springaitutorial.dto;
+package com.example.springaitutorial.chat.controller.dto;
 
-public class ChatQueryRequest {
+public class ChatMessageRequest {
 
 	private final String model;
 	private final String userMessage;
 
-	public ChatQueryRequest(String model, String userMessage) {
+	public ChatMessageRequest(String model, String userMessage) {
 		this.model = model;
 		this.userMessage = userMessage;
 	}

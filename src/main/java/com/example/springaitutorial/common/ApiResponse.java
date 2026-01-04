@@ -1,4 +1,4 @@
-package com.example.springaitutorial.dto;
+package com.example.springaitutorial.common;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 

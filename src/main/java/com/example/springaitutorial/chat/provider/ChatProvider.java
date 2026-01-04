@@ -4,11 +4,11 @@ import org.springframework.ai.chat.model.ChatResponse;
 
 public interface ChatProvider {
 
-	String name();
-
-	boolean supports(String model);
+	ProviderType type();
 
 	String defaultModel();
+
+	boolean supports(String model);
 
 	ChatResponse chat(String systemMessage, String userMessage, String model);
 }

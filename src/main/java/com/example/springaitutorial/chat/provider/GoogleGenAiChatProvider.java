@@ -14,29 +14,25 @@ import org.springframework.stereotype.Component;
 @Component
 public class GoogleGenAiChatProvider implements ChatProvider {
 
-	private final GoogleGenAiChatModel chatModel;
+	private final GoogleGenAiChatModel googleGenAiChatModel;
 
-	public GoogleGenAiChatProvider(GoogleGenAiChatModel chatModel) {
-		this.chatModel = chatModel;
+	public GoogleGenAiChatProvider(GoogleGenAiChatModel googleGenAiChatModel) {
+		this.googleGenAiChatModel = googleGenAiChatModel;
 	}
 
 	@Override
-	public String name() {
-		return "Google_Gen_Ai_Chat";
-	}
-
-	@Override
-	public boolean supports(String model) {
-		if (model == null) {
-			return false;
-		}
-		String modelName = model.trim().toLowerCase();
-		return modelName.startsWith("gemini");
+	public ProviderType type() {
+		return ProviderType.GOOGLE_GENAI;
 	}
 
 	@Override
 	public String defaultModel() {
-		return "gemini-2.5-flash";
+		return type().defaultModel();
+	}
+
+	@Override
+	public boolean supports(String model) {
+		return type().supportsModel(model);
 	}
 
 	@Override
@@ -51,6 +47,6 @@ public class GoogleGenAiChatProvider implements ChatProvider {
 			.build();
 
 		Prompt prompt = new Prompt(messages, options);
-		return chatModel.call(prompt);
+		return googleGenAiChatModel.call(prompt);
 	}
 }

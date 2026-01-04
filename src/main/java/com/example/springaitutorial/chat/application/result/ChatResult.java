@@ -1,4 +1,4 @@
-package com.example.springaitutorial.chat.application;
+package com.example.springaitutorial.chat.application.result;
 
 public final class ChatResult {
 

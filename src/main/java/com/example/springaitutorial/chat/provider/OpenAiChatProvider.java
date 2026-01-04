@@ -14,29 +14,25 @@ import org.springframework.stereotype.Component;
 @Component
 public class OpenAiChatProvider implements ChatProvider {
 
-	private final OpenAiChatModel chatModel;
+	private final OpenAiChatModel openAiChatModel;
 
-	public OpenAiChatProvider(OpenAiChatModel chatModel) {
-		this.chatModel = chatModel;
+	public OpenAiChatProvider(OpenAiChatModel openAiChatModel) {
+		this.openAiChatModel = openAiChatModel;
 	}
 
 	@Override
-	public String name() {
-		return "Open_AI_Chat";
-	}
-
-	@Override
-	public boolean supports(String model) {
-		if (model == null) {
-			return false;
-		}
-		String modelName = model.trim().toLowerCase();
-		return modelName.startsWith("gpt-") || modelName.startsWith("chatgpt-") || modelName.matches("^o\\d.*");
+	public ProviderType type() {
+		return ProviderType.OPEN_AI;
 	}
 
 	@Override
 	public String defaultModel() {
-		return "gpt-4.1-nano";
+		return type().defaultModel();
+	}
+
+	@Override
+	public boolean supports(String model) {
+		return type().supportsModel(model);
 	}
 
 	@Override
@@ -51,6 +47,6 @@ public class OpenAiChatProvider implements ChatProvider {
 			.build();
 
 		Prompt prompt = new Prompt(messages, options);
-		return chatModel.call(prompt);
+		return openAiChatModel.call(prompt);
 	}
 }
