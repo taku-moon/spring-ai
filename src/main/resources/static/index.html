@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Spring AI Tutorial</title>
+    <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+
+<header>
+    <h1>Spring AI Tutorial</h1>
+    <nav class="tabs">
+        <button class="tab-btn active" data-tab="chat">Chat</button>
+        <button class="tab-btn" data-tab="rag">RAG</button>
+    </nav>
+</header>
+
+<main>
+    <!-- ═══ Chat Tab ═══ -->
+    <section id="panel-chat" class="tab-panel active">
+        <div id="chat-messages" class="messages">
+            <div class="empty-state">Send a message to start chatting.</div>
+        </div>
+        <div class="typing" id="chat-typing"><span></span><span></span><span></span></div>
+        <div class="input-area">
+            <div class="input-controls">
+                <label for="chat-model">Model</label>
+                <select id="chat-model">
+                    <option value="gpt-4.1-nano">gpt-4.1-nano (OpenAI)</option>
+                    <option value="gpt-4.1-mini">gpt-4.1-mini (OpenAI)</option>
+                    <option value="gemini-2.5-flash">gemini-2.5-flash (Google)</option>
+                </select>
+            </div>
+            <div class="input-row">
+                <textarea id="chat-input" placeholder="Type a message..." rows="1"></textarea>
+                <button class="send-btn" id="chat-send" title="Send">&#10148;</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ RAG Tab ═══ -->
+    <section id="panel-rag" class="tab-panel">
+        <div class="upload-zone">
+            <div class="upload-box" id="upload-box">
+                <input type="file" id="file-input" accept=".pdf"/>
+                <div class="icon">&#128196;</div>
+                <div class="label">Click or drag a <strong>PDF</strong> file here to upload</div>
+            </div>
+            <div class="upload-progress" id="upload-progress">
+                <div class="spinner"></div>
+                <span>Uploading and indexing document...</span>
+            </div>
+            <div class="doc-info" id="doc-info">
+                <div class="details">
+                    <strong id="doc-filename"></strong>
+                    &mdash; <span id="doc-id-display"></span>, <span id="doc-chunks"></span> chunks
+                </div>
+                <button class="reset-btn" id="doc-reset">Reset</button>
+            </div>
+        </div>
+
+        <div id="rag-messages" class="messages">
+            <div class="empty-state">Upload a PDF document, then ask questions about it.</div>
+        </div>
+        <div class="typing" id="rag-typing"><span></span><span></span><span></span></div>
+        <div class="input-area">
+            <div class="input-controls">
+                <label for="rag-model">Model</label>
+                <select id="rag-model">
+                    <option value="gpt-4.1-nano">gpt-4.1-nano (OpenAI)</option>
+                    <option value="gpt-4.1-mini">gpt-4.1-mini (OpenAI)</option>
+                    <option value="gemini-2.5-flash">gemini-2.5-flash (Google)</option>
+                </select>
+            </div>
+            <div class="input-row">
+                <textarea id="rag-input" placeholder="Ask a question about the document..." rows="1"
+                          disabled></textarea>
+                <button class="send-btn" id="rag-send" title="Send" disabled>&#10148;</button>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script src="app.js" defer></script>
+</body>
+</html>
