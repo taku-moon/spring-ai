@@ -18,6 +18,11 @@ public class ChatFacade {
 	}
 
 	public ChatResult chat(String userMessage, String model) {
+		String systemMessage = ChatSystemMessagePolicy.build();
+		return chat(systemMessage, userMessage, model);
+	}
+
+	public ChatResult chat(String systemMessage, String userMessage, String model) {
 		if (userMessage == null || userMessage.isBlank()) {
 			throw new IllegalArgumentException("입력된 메시지가 없습니다.");
 		}
@@ -32,7 +37,6 @@ public class ChatFacade {
 			provider = chatRouter.routeByModel(resolvedModel);
 		}
 
-		String systemMessage = ChatSystemMessagePolicy.build();
 		ChatResponse response = provider.chat(systemMessage, userMessage, resolvedModel);
 
 		return new ChatResult(
