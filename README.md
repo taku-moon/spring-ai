@@ -2,8 +2,6 @@
 
 Spring AI의 고수준 추상화(`ChatClient`, `Advisor` 등)에 의존하지 않고, 저수준 빌딩 블록을 조합하여 **멀티 프로바이더 채팅**과 **PDF 기반 RAG(
 Retrieval-Augmented Generation)** 흐름을 직접 구현한 프로젝트입니다.
-![img.png](img.png)
-![img_1.png](img_1.png)
 
 ## 설계 방향
 
